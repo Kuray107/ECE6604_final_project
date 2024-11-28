@@ -1,0 +1,68 @@
+{
+    "exp_dir": "ANN/MSE/",
+    "trainer":{
+        "max_epochs": 50,
+        "deterministic": false,
+        "check_val_every_n_epoch": 10, 
+        "accumulate_grad_batches": 1
+    },
+    "lightning_module": {
+        "module": "lightning_modules.regular_module",
+        "main": "RegularModule"
+    },
+    "use_wandb": true,
+    "wandb_args": {
+        "name": "MSE_ANN_no_dropout_no_weight_decay",
+        "project": "ECE6604"
+    },
+    "signal_loss_fn":{
+        "module": "torch.nn",
+        "main": "MSELoss",
+        "args": {}
+    },
+    "denoising_model": {
+        "module": "model.ANN",
+        "main": "ANN",
+        "args": {
+            "in_channels": 1,
+            "channels_list": [32, 64, 128],
+            "final_conv_channels": 64,
+            "kernel_size": 5,
+            "dropout": 0.0
+        }
+    },
+    "classification_model": {
+        "module": "model.classifier",
+        "main": "LinearClassifier",
+        "args": {
+            "symbol_length": 32,
+            "bit_length": 29,
+            "node_list": [32, 64, 128],
+            "dropout": 0.0
+        }
+    },
+    "optimizer": {
+        "lr": 1e-3,
+        "beta1": 0.9,
+        "beta2": 0.999,
+        "weight_decay": 0.0
+    },
+    "lr_scheduler":{
+        "T_max": 16900,
+        "eta_min": 1e-4
+    },
+    "train_dataloader": {
+        "batch_size": 64,
+        "num_workers": 64,
+        "shuffle": true,
+        "pin_memory": true,
+        "collate_fn": {
+            "module": "dataset.waveform_dataset",
+            "main": "collate_fn"
+        }
+    },
+    "val_dataloader": {
+        "batch_size": 64,
+        "num_workers": 64
+    }
+}

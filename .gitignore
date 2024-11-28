@@ -1,0 +1,11 @@
+# Experiment output
+Experiments/
+# bus
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+.vscode
+pyproject.toml
