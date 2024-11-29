@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import einops
 
 from model.DSSM_modules.components import TransposedLN
 
@@ -81,7 +82,7 @@ class DecoderLayer(nn.Module):
         x = self.dropout(x)
         return x
 
-class ANN(nn.Module):
+class CRN(nn.Module):
     """
     Implements an autoencoder-like network with a series of encoder
     and decoder layers.
@@ -95,8 +96,10 @@ class ANN(nn.Module):
     """
     def __init__(
         self, 
-        in_channels=1,
-        channels_list=[32, 64, 128],
+        symbol_length=32,
+        channels_list= [64, 128],
+        rnn_units=64,
+        rnn_layers=1,
         final_conv_channels=64,
         kernel_size=5,
         dropout=0.0, 
@@ -104,8 +107,9 @@ class ANN(nn.Module):
         super().__init__()
 
         # Prepare the list of channel sizes for encoder and decoder
-        enc_channels_list = [in_channels] + channels_list
+        enc_channels_list = [symbol_length] + channels_list
         self.num_layers = len(enc_channels_list) - 1
+        self.symbol_length = symbol_length
 
         # Define encoder layers
         self.encoder = nn.ModuleList()
@@ -118,6 +122,18 @@ class ANN(nn.Module):
                     dropout=dropout
                 )
             )
+
+        rnn_input_dim = channels_list[-1]
+
+        self.lstm_prenet = nn.Linear(rnn_input_dim, rnn_units)
+        self.lstm = nn.LSTM(
+            input_size=rnn_units,
+            hidden_size=rnn_units,
+            num_layers=rnn_layers,
+            bidirectional=True,
+            batch_first=True,
+        )
+        self.lstm_postnet = nn.Linear(rnn_units * 2, rnn_input_dim)
 
         # Define decoder layers
         self.decoder = nn.ModuleList()
@@ -134,8 +150,7 @@ class ANN(nn.Module):
 
         self.norm = TransposedLN(d=dec_channels_list[0])
         self.final_conv = nn.Sequential(
-            nn.ReLU(),
-            nn.Conv1d(final_conv_channels, in_channels, kernel_size=1),
+            nn.Conv1d(final_conv_channels, symbol_length, kernel_size=1),
         )
 
     def forward(self, inputs: torch.Tensor):
@@ -151,20 +166,26 @@ class ANN(nn.Module):
         assert inputs.ndim == 2, "Input tensor must be 2-dimensional (batch_size, sequence_length)."
 
         # Add a channel dimension
-        x = inputs.unsqueeze(1)
+        outputs = einops.rearrange(inputs, "B (D T) -> B D T", D=self.symbol_length)
 
         # Pass through encoder layers
         for enc_layer in self.encoder:
-            x = enc_layer(x)
+            outputs = enc_layer(outputs)
+
+        outputs = einops.rearrange(outputs, "B D T -> B T D")
+        outputs = self.lstm_prenet(outputs)
+        outputs, _ = self.lstm(outputs)
+        outputs = self.lstm_postnet(outputs)
+        outputs = einops.rearrange(outputs, "B T D -> B D T")
 
         # Pass through decoder layers
         for dec_layer in self.decoder:
-            x = dec_layer(x) 
+            outputs = dec_layer(outputs) 
         
+        outputs = self.norm(outputs)
+        outputs = self.final_conv(outputs)
 
-        x = self.norm(x)
-        x = self.final_conv(x)
+        # Rearrange back to flattened output
+        outputs = einops.rearrange(outputs, "B D T -> B (D T)")
 
-
-        # Remove the channel dimension
-        return x.squeeze(1)
+        return outputs

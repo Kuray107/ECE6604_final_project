@@ -1,6 +1,6 @@
 #!/bin/bash
-export CUDA_VISIBLE_DEVICES=1
-root_dir=Experiments/snr0-10/S4Compact/MSE/no_dropout_no_weight_decay;
+export CUDA_VISIBLE_DEVICES=2
+root_dir=Experiments/snr-6-12/S4Compact/MSE/no_dropout_no_weight_decay;
 
 
 for test_config in $(find config/dataset_config/test/ -name "*.json"); do
