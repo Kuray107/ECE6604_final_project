@@ -113,8 +113,8 @@ def save_results(score_records, output_dir, use_classsifier):
         print(f"Use DNN Classifier: {use_classsifier}", file=outfile)
         for key, value_list in score_records.items():
             mean, std = mean_std(np.asarray(value_list))
-            print(f"{key}: {mean:.4f} ± {std:.4f}")
-            print(f"{key}: {mean:.4f} ± {std:.4f}", file=outfile)
+            print(f"{key}: {mean:.6f} ± {std:.6f}")
+            print(f"{key}: {mean:.6f} ± {std:.6f}", file=outfile)
 
     df = pd.DataFrame(score_records)
     if use_classsifier:

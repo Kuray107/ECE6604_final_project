@@ -25,10 +25,10 @@
         "main": "CRN",
         "args": {
             "symbol_length": 32,
-            "channels_list": [64, 128],
-            "rnn_units": 64,
+            "channels_list": [128, 128],
+            "rnn_units": 128,
             "rnn_layers": 1,
-            "final_conv_channels": 64,
+            "final_conv_channels": 128,
             "kernel_size": 5,
             "dropout": 0.0
         }

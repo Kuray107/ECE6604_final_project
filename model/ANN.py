@@ -96,8 +96,8 @@ class ANN(nn.Module):
     def __init__(
         self, 
         in_channels=1,
-        channels_list=[32, 64, 128],
-        final_conv_channels=64,
+        channels_list=[64, 128, 128],
+        final_conv_channels=128,
         kernel_size=5,
         dropout=0.0, 
     ):

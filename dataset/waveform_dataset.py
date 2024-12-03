@@ -58,9 +58,7 @@ class Dataset(data.Dataset):
             sparse=True
         )
         self.n, self.k = self.G.shape
-        print("Number of coded bits per block:", self.k)
-        print("Number of generated bits per block:", self.n)
-
+        
         if not self.is_training:
             self.rng = random.Random()
             self.rng.seed(self.seed)

@@ -1,5 +1,5 @@
 {
-    "exp_dir": "CRN/MSE/",
+    "exp_dir": "Transformer/MSE/",
     "trainer":{
         "max_epochs": 40,
         "deterministic": false,
@@ -12,7 +12,7 @@
     },
     "use_wandb": true,
     "wandb_args": {
-        "name": "MSE_CRN_dropout_20_no_weight_decay",
+        "name": "MSE_Transformer_no_dropout_no_weight_decay",
         "project": "ECE6604"
     },
     "signal_loss_fn":{
@@ -21,16 +21,15 @@
         "args": {}
     },
     "denoising_model": {
-        "module": "model.CRN",
-        "main": "CRN",
+        "module": "model.Transformer",
+        "main": "TransformerUNet",
         "args": {
             "symbol_length": 32,
-            "channels_list": [128, 128],
-            "rnn_units": 128,
-            "rnn_layers": 1,
-            "final_conv_channels": 128,
-            "kernel_size": 5,
-            "dropout": 0.2
+            "dim": 128,
+            "depth": 4,
+            "heads": 4,
+            "ff_mult": 2,
+            "ff_dropout": 0.0
         }
     },
     "classification_model": {

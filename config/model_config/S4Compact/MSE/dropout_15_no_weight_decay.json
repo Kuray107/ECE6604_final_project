@@ -1,5 +1,5 @@
 {
-    "exp_dir": "S4Compact/MAE/",
+    "exp_dir": "S4Compact/MSE/",
     "trainer":{
         "max_epochs": 40,
         "deterministic": false,
@@ -12,12 +12,12 @@
     },
     "use_wandb": true,
     "wandb_args": {
-        "name": "MAE_S4Compact_no_dropout_no_weight_decay",
+        "name": "MSE_S4Compact_dropout_15_no_weight_decay",
         "project": "ECE6604"
     },
     "signal_loss_fn":{
         "module": "torch.nn",
-        "main": "L1Loss",
+        "main": "MSELoss",
         "args": {}
     },
     "denoising_model": {
@@ -29,7 +29,7 @@
             "d_model": 64,
             "d_state": 16,
             "n_layers": 4,
-            "dropout": 0.0
+            "dropout": 0.15
         }
     },
     "classification_model": {

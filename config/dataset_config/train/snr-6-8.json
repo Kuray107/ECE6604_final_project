@@ -11,7 +11,7 @@
                 "d_v": 2,
                 "d_c": 16
             },
-            "snr_values": [0, 2, 4, 6, 8, 10],
+            "snr_values": [-6, -4, -2, 0, 2, 4, 6, 8],
             "num_blocks": 1000,
             "limit": null,
             "offset": 0,

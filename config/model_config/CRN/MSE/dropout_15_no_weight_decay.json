@@ -12,7 +12,7 @@
     },
     "use_wandb": true,
     "wandb_args": {
-        "name": "MSE_CRN_dropout_20_no_weight_decay",
+        "name": "MSE_CRN_dropout_15_no_weight_decay",
         "project": "ECE6604"
     },
     "signal_loss_fn":{
@@ -30,7 +30,7 @@
             "rnn_layers": 1,
             "final_conv_channels": 128,
             "kernel_size": 5,
-            "dropout": 0.2
+            "dropout": 0.1
         }
     },
     "classification_model": {
