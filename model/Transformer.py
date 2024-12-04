@@ -34,6 +34,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# It is modified by Pin-Jui Ku to apply the model to the 5G channel denoising task
+
 
 from typing import Optional
 

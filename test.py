@@ -74,17 +74,6 @@ def main(args):
 
 
 def run_inference(lightning_module, dataloader, use_classifier=True):
-    """
-    Run inference or evaluation on a dataset using a given model.
-
-    Args:
-        lightning_module (torch.nn.Module): PyTorch model for inference or evaluation.
-        dataloader (torch.utils.data.DataLoader): DataLoader for the dataset.
-        mode (str):
-
-    Returns:
-        defaultdict[list]: Dictionary of score records.
-    """
     score_records = defaultdict(list)
     with torch.no_grad():
         for batch in tqdm(dataloader, desc="Inference"):
@@ -99,14 +88,6 @@ def run_inference(lightning_module, dataloader, use_classifier=True):
 
 
 def save_results(score_records, output_dir, use_classsifier):
-    """
-    Save inference or evaluation results to a file.
-
-    Args:
-        score_records (defaultdict[list]): Dictionary of score records.
-        output_dir (pathlib.Path): Directory to save the results.
-        mode (str):
-    """
     log_file_path = output_dir / "log.txt"
     with log_file_path.open("a") as outfile:
         print(f"Use DNN Classifier: {use_classsifier}")
